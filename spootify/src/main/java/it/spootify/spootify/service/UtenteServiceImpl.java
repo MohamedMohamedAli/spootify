@@ -52,6 +52,9 @@ public class UtenteServiceImpl implements UtenteService{
 	@Override
 	public void aggiorna(Utente input) {
 		// TODO Auto-generated method stub
+		Utente utente = utenteRepository.findById(input.getId()).orElse(null);
+		input.setStato(utente.getStato());
+		input.setDataRegistrazione(utente.getDataRegistrazione());
 		utenteRepository.save(input);
 	}
 	@Transactional
@@ -113,7 +116,7 @@ public class UtenteServiceImpl implements UtenteService{
 		sessioneRepository.save(sessione);
 		utente.setSessione(sessione);
 		utenteRepository.save(utente);
-		return DTO.SI;
+		return sessione.getCodice();
 	}
 	@Transactional
 	@Override
@@ -146,7 +149,10 @@ public class UtenteServiceImpl implements UtenteService{
 			utenteRepository.save(utente);
 			return DTO.SESSIONE_SCADUTA;
 		}
-		
+		System.out.println("aggiorno tempo sessione");
+		Sessione sessione = sessioneRepository.findById(utente.getSessione().getId()).orElse(null);
+		sessione.setDataInizioSessione(new Date());
+		sessioneRepository.save(sessione);
 		return DTO.SI;
 	}
 	@Transactional(readOnly=true)

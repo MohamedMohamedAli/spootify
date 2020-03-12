@@ -36,11 +36,12 @@ public class FiltroAdmin implements Filter{
 		System.out.println("url in admin: "+url);
 		System.out.println(codice);
 		if(url.contains("admin")) {
-		String stato = utenteService.utenteAdmin(codice);
-		if(stato.equals(DTO.NO)) {
-			request.setAttribute("dtoAttr", new ErroreDTO("Area riservata"));
-			request.getRequestDispatcher("/home/errore").forward(request, response);
-		}
+			String stato = utenteService.utenteAdmin(codice);
+			if(stato.equals(DTO.NO)) {
+				request.setAttribute("dtoAttr", new ErroreDTO("Area riservata"));
+				request.getRequestDispatcher("/home/errore").forward(request, response);
+				return;
+			}
 		}
 		chain.doFilter(request, response);
 	}

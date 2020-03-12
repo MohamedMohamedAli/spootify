@@ -22,7 +22,6 @@ import it.spootify.spootify.web.dto.ErroreDTO;
 public class FiltroSessione implements Filter{
 	@Autowired
 	private HttpServletRequest http;
-	
 	@Autowired
 	private UtenteService utenteService;
 	
@@ -30,12 +29,9 @@ public class FiltroSessione implements Filter{
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		// TODO Auto-generated method stub
-		System.out.println("sono nel filtro sessione");
 		String codice = http.getHeader("codice");
-		System.out.println("codice nel filtro sessione: "+codice);
 		String stato = "";
 		String url = http.getRequestURL().toString();
-		System.out.println("contiene login: "+url.contains("login"));
 		if(!url.contains("login")) {
 			stato = utenteService.utenteSessione(codice);
 			System.out.println("stato: "+stato);
@@ -46,12 +42,12 @@ public class FiltroSessione implements Filter{
 				request.getRequestDispatcher("/home/errore").forward(request, response);
 				return;
 			case DTO.SESSIONE_SCADUTA:
+				System.out.println("sessione scaduta");
 				request.setAttribute("dtoAttr", new ErroreDTO("Sessione scaduta"));
 				request.getRequestDispatcher("/home/errore").forward(request, response);
 				return;
 			}
 		}
-		System.out.println("url: "+url);
 		
 		chain.doFilter(request, response);
 	}

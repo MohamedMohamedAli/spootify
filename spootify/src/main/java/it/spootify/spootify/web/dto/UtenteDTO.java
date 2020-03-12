@@ -103,6 +103,8 @@ public class UtenteDTO {
 		utente.setId(this.id);
 		utente.setNome(this.nome);
 		utente.setCognome(this.cognome);
+		utente.setStato(this.stato);
+		utente.setDataRegistrazione(this.dataRegistrazione);
 		utente.setUsername(this.username);
 		utente.setPassword(this.password);
 		if(eagerSessione) {
