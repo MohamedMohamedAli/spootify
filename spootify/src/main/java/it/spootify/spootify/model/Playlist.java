@@ -3,7 +3,6 @@ package it.spootify.spootify.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -27,7 +26,7 @@ public class Playlist {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "creatore_id")
 	private Utente creatore;
-	@ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "playlist_brano", joinColumns = @JoinColumn(name = "playlist_id", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "brano_id", referencedColumnName = "ID"))
 	private List<Brano>brani = new ArrayList<Brano>();
 	@OneToMany(mappedBy = "playlist")

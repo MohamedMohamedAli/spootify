@@ -34,14 +34,14 @@ public class AlbumResource {
 		AlbumDTO albumDTO = albumService.caricaConIdEager(id).buildDTO(true, true, false);
 		return ResponseEntity.ok(albumDTO);
 	}
-	@PostMapping("/insert")
+	@PostMapping("/admin/insert")
 	public ResponseEntity<AlbumDTO> insert(@RequestBody AlbumDTO albumDTO){
 		Album album = albumDTO.buildModel(true, true, false);
 		album.setDataUscita(albumDTO.getDataUscita());
 		albumService.inserisci(album);
 		return ResponseEntity.ok(albumDTO);
 	}
-	@PutMapping("/modifica/{id}")
+	@PutMapping("/admin/modifica/{id}")
 	public ResponseEntity<AlbumDTO> modifica(@RequestBody AlbumDTO albumDTO, @PathVariable("id")Long id){
 		albumDTO.setId(id);
 		Album album = albumDTO.buildModel(true, true, false);
@@ -49,7 +49,7 @@ public class AlbumResource {
 		albumService.aggiorna(album);
 		return ResponseEntity.ok(albumDTO);
 	}
-	@DeleteMapping("/elimina/{id}")
+	@DeleteMapping("/admin/elimina/{id}")
 	public ResponseEntity<ConfermaDTO> elimina(@PathVariable("id")Long id){
 		albumService.elimina(id);
 		return ResponseEntity.ok(new ConfermaDTO("album ["+id+"] eliminato con successo"));

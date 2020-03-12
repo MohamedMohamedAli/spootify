@@ -40,20 +40,20 @@ public class BranoResource {
 		BranoDTO branoDTO = branoService.caricaConIdEager(id).buildDTO(true, false, false);
 		return ResponseEntity.ok(branoDTO);
 	}
-	@PostMapping("/insert")
+	@PostMapping("/admin/insert")
 	public ResponseEntity<BranoDTO> insert(@RequestBody BranoDTO branoDTO){
 		Brano brano = branoDTO.buildModel(true,true,true);
 		branoService.inserisci(brano);
 		return ResponseEntity.ok(branoDTO);
 	}
-	@PutMapping("/modifica/{id}")
+	@PutMapping("/admin/modifica/{id}")
 	public ResponseEntity<BranoDTO> modifica(@RequestBody BranoDTO branoDTO, @PathVariable("id")Long id){
 		branoDTO.setId(id);
 		Brano brano = branoDTO.buildModel(true, true, true);
 		branoService.aggiorna(brano);
 		return ResponseEntity.ok(branoDTO);
 	}
-	@DeleteMapping("/elimina/{id}")
+	@DeleteMapping("/admin/elimina/{id}")
 	public ResponseEntity<ConfermaDTO> elimina(@PathVariable("id")Long id){
 		branoService.elimina(id);
 		return ResponseEntity.ok(new ConfermaDTO("brano ["+id+"] eliminato con successo"));

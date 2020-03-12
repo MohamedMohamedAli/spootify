@@ -34,20 +34,20 @@ public class ArtistaResource {
 		ArtistaDTO artistaDTO = artistaService.caricaConIdEager(id).buildDTO(true);
 		return ResponseEntity.ok(artistaDTO);
 	}
-	@PostMapping("/insert")
+	@PostMapping("/admin/insert")
 	public ResponseEntity<ArtistaDTO> insert(@RequestBody ArtistaDTO artistaDTO){
 		Artista artista = artistaDTO.buildModel(false);
 		artistaService.inserisci(artista);
 		return ResponseEntity.ok(artistaDTO);
 	}
-	@PutMapping("/modifica/{id}")
+	@PutMapping("/admin/modifica/{id}")
 	public ResponseEntity<ArtistaDTO> modifica(@RequestBody ArtistaDTO artistaDTO, @PathVariable("id")Long id){
 		artistaDTO.setId(id);
 		Artista artista = artistaDTO.buildModel(false);
 		artistaService.aggiorna(artista);
 		return ResponseEntity.ok(artistaDTO);
 	}
-	@DeleteMapping("/elimina/{id}")
+	@DeleteMapping("/admin/elimina/{id}")
 	public ResponseEntity<ConfermaDTO> elimina(@PathVariable("id")Long id){
 		artistaService.elimina(id);
 		return ResponseEntity.ok(new ConfermaDTO("artista ["+id+"] eliminato con successo"));
