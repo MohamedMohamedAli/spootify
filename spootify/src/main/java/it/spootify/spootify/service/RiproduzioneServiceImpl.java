@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.spootify.spootify.model.Album;
+import it.spootify.spootify.model.Brano;
 import it.spootify.spootify.model.Playlist;
 import it.spootify.spootify.model.Riproduzione;
 import it.spootify.spootify.model.Utente;
@@ -108,12 +109,84 @@ public class RiproduzioneServiceImpl implements RiproduzioneService{
 		// CARICO RIPRODUZIONE ESISTENTE
 		Riproduzione riproduzione1 = lista.get(0);
 		if(riproduzione1.getAlbum()!=null) {
-			riproduzione1.setAlbum(albumRepository.findByIdWithBrani(Long.parseLong(example.getIdAlbum())));
+			Album album1 = albumRepository.findByIdWithBrani(Long.parseLong(example.getIdAlbum()));
+			riproduzione1.setAlbum(album1);
+			if(riproduzione1.getBrano()==null) {
+				riproduzione1.setBrano(album1.getBrani().get(0));
+			}
 		}else {
-			riproduzione1.setPlaylist(playlistRepository.findByIdWithBrani(Long.parseLong(example.getIdPlaylist())));
+			Playlist playlist1 = playlistRepository.findByIdWithBrani(Long.parseLong(example.getIdPlaylist()));
+			riproduzione1.setPlaylist(playlist1);
+			if(riproduzione1.getBrano()==null) {
+				riproduzione1.setBrano(playlist1.getBrani().get(0));
+			}
 		}
 		return riproduzione1;
 	}
+	
+	@Transactional
+	@Override
+	public Brano cambiaBrano(RiproduzioneProvaDTO input) {
+		// TODO Auto-generated method stub
+		Riproduzione riproduzione = riproduzioneRepository.findById(input.getId()).orElse(null);
+		 //controllo index brano nell'album
+		if(riproduzione.getAlbum()!=null) {
+			Album album = albumRepository.findByIdWithBrani(riproduzione.getAlbum().getId());
+			for(int i=0; i<album.getBrani().size(); i++) {
+				System.out.println("id brano album: "+album.getBrani().get(i).getId()+"  , id brano riproduzione: "+riproduzione.getBrano().getId());
+				if(album.getBrani().get(i).getId() == riproduzione.getBrano().getId()) {
+					//brano precedente
+					if(input.getBrano().equals("back")){
+						if(i>0) {
+							riproduzione.setBrano(album.getBrani().get(i-1));
+							break;
+						}else {
+							riproduzione.setBrano(album.getBrani().get(album.getBrani().size()-1));
+							break;
+						}
+					}// brano successivo
+					else {
+						if(i<album.getBrani().size()-1){
+							riproduzione.setBrano(album.getBrani().get(i+1));
+							break;
+						}else {
+							riproduzione.setBrano(album.getBrani().get(0));
+							break;
+						}
+					}
+				}
+			}
+		}// controllo index brano nella playlist
+		else {
+			Playlist playlist = playlistRepository.findByIdWithBrani(riproduzione.getPlaylist().getId());
+			for(int i=0; i<playlist.getBrani().size(); i++) {
+				if(playlist.getBrani().get(i).getId() == riproduzione.getBrano().getId()) {
+					//brano precedente
+					if(input.getBrano().equals("back")){
+						if(i>0) {
+							riproduzione.setBrano(playlist.getBrani().get(i-1));
+							break;
+						}else {
+							riproduzione.setBrano(playlist.getBrani().get(playlist.getBrani().size()-1));
+							break;
+						}
+					}// brano successivo
+					else {
+						if(i<playlist.getBrani().size()-1){
+							riproduzione.setBrano(playlist.getBrani().get(i+1));
+							break;
+						}else {
+							riproduzione.setBrano(playlist.getBrani().get(0));
+							break;
+						}
+					}
+				}
+			}
+		}
+		riproduzioneRepository.save(riproduzione);
+		return riproduzione.getBrano();
+	}
+	
 	@Override
 	public List<Riproduzione> cercaExample(Riproduzione example) {
 		// TODO Auto-generated method stub

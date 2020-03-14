@@ -11,6 +11,6 @@ public interface AlbumRepository extends CrudRepository< Album , Long>,QueryByEx
 	@Query("select distinct a from Album a left join fetch a.brani b left join fetch a.artista where a.id=?1")
 	Album findByIdEager(Long id);
 	@Query("select distinct a from Album a left join fetch a.brani b where a.id=?1")
-	Album findByIdWithBrani(long parseLong);
+	Album findByIdWithBrani(long id);
 
 }

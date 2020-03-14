@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import it.spootify.spootify.model.Brano;
 import it.spootify.spootify.model.Riproduzione;
 import it.spootify.spootify.service.RiproduzioneService;
+import it.spootify.spootify.web.dto.BranoDTO;
 import it.spootify.spootify.web.dto.RiproduzioneDTO;
 import it.spootify.spootify.web.dto.RiproduzioneProvaDTO;
 
@@ -30,6 +31,14 @@ public class RiproduzioneResource {
 			riproduzioneDTO.getPlaylist().setBrani(Brano.buildListDTO(riproduzione.getPlaylist().getBrani()));
 		}
 		return ResponseEntity.ok(riproduzioneDTO);
+	}
+	
+	@PostMapping("/cambiaBrano")
+	public ResponseEntity<BranoDTO> cambiaBrano(@RequestBody RiproduzioneProvaDTO input){
+		
+		BranoDTO branoDTO = riproduzioneService.cambiaBrano(input).buildDTO(false, false, false);
+		
+		return ResponseEntity.ok(branoDTO);
 	}
 	
 }
