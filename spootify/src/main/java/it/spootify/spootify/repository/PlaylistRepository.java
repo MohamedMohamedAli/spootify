@@ -12,5 +12,7 @@ public interface PlaylistRepository extends CrudRepository< Playlist , Long>,Que
 	Playlist findByIdEager(Long id);
 	@Query("select distinct p from Playlist p left join fetch p.riproduzione r where p.id=?1")
 	Playlist findByIdRiproduzione(Long id);
+	@Query("select distinct p from Playlist p left join fetch p.brani where p.id=?1")
+	Playlist findByIdWithBrani(Long id);
 
 }

@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.spootify.spootify.model.Playlist;
+import it.spootify.spootify.model.Utente;
 import it.spootify.spootify.repository.PlaylistRepository;
+import it.spootify.spootify.repository.UtenteRepository;
 
 @Service
 public class PlaylistServiceImpl implements PlaylistService{
@@ -19,6 +21,8 @@ public class PlaylistServiceImpl implements PlaylistService{
 	private EntityManager entityManager;
 	@Autowired
 	private PlaylistRepository playlistRepository;
+	@Autowired
+	private UtenteRepository utenteRepository;
 	
 	@Transactional(readOnly=true)
 	@Override
@@ -42,6 +46,8 @@ public class PlaylistServiceImpl implements PlaylistService{
 	@Override
 	public void aggiorna(Playlist input) {
 		// TODO Auto-generated method stub
+		Playlist playlist = playlistRepository.findById(input.getId()).orElse(null);
+		input.setCreatore(playlist.getCreatore());
 		playlistRepository.save(input);
 	}
 	@Transactional
@@ -62,6 +68,14 @@ public class PlaylistServiceImpl implements PlaylistService{
 		// TODO Auto-generated method stub
 		Playlist playlist = playlistRepository.findByIdEager(id);
 		return playlist;
+	}
+	@Transactional
+	@Override
+	public void crea(Playlist playlist, String codice) {
+		// TODO Auto-generated method stub
+		Utente utente = utenteRepository.caricaUtenteConCodice(codice);
+		playlist.setCreatore(utente);
+		playlistRepository.save(playlist);
 	}
 
 }

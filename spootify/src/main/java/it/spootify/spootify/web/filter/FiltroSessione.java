@@ -29,6 +29,7 @@ public class FiltroSessione implements Filter{
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		// TODO Auto-generated method stub
+		System.out.println("sono nel filtro sessione");
 		String codice = http.getHeader("codice");
 		String stato = "";
 		String url = http.getRequestURL().toString();

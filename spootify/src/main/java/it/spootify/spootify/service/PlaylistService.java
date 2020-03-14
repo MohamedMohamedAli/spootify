@@ -6,4 +6,6 @@ public interface PlaylistService extends IBaseService<Playlist>{
 
 	public Playlist caricaConIdEager(Long id);
 
+	public void crea(Playlist playlist, String codice);
+
 }

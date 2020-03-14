@@ -10,5 +10,7 @@ import it.spootify.spootify.model.Album;
 public interface AlbumRepository extends CrudRepository< Album , Long>,QueryByExampleExecutor < Album > {
 	@Query("select distinct a from Album a left join fetch a.brani b left join fetch a.artista where a.id=?1")
 	Album findByIdEager(Long id);
+	@Query("select distinct a from Album a left join fetch a.brani b where a.id=?1")
+	Album findByIdWithBrani(long parseLong);
 
 }

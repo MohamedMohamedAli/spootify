@@ -68,16 +68,16 @@ public class Riproduzione {
 	public RiproduzioneDTO buildDTO(boolean eagerBrano, boolean eagerPlaylist, boolean eagerAlbum, boolean eagerCustomer) {
 		RiproduzioneDTO riproduzioneDTO = new RiproduzioneDTO();
 		riproduzioneDTO.setId(this.id);
-		if(eagerBrano) {
+		if(eagerBrano&&this.brano!=null) {
 			riproduzioneDTO.setBrano(this.brano.buildDTO(false,false,false));
 		}
-		if(eagerPlaylist) {
+		if(eagerPlaylist&&this.playlist!=null) {
 			riproduzioneDTO.setPlaylist(this.playlist.buildDTO(false,false,false));
 		}
-		if(eagerAlbum) {
+		if(eagerAlbum&&this.album!=null) {
 			riproduzioneDTO.setAlbum(this.album.buildDTO(false,false,false));
 		}
-		if(eagerCustomer) {
+		if(eagerCustomer&&this.customer!=null) {
 			riproduzioneDTO.setCustomer(this.customer.buildDTO(false,false,false,false));
 		}
 		return riproduzioneDTO;

@@ -158,6 +158,7 @@ public class UtenteServiceImpl implements UtenteService{
 	@Transactional(readOnly=true)
 	@Override
 	public String utenteAdmin(String codiceSessione) {
+		System.out.println("codiceSessione: "+codiceSessione);
 		// TODO Auto-generated method stub
 		Utente utente = utenteRepository.caricaUtenteConCodice(codiceSessione);
 		System.out.println("utente: "+utente);

@@ -39,7 +39,7 @@ public class SessioneResource {
 		case DTO.DISABILITATO:
 			return ResponseEntity.ok(new ErroreDTO("L'account è stato disabilitato"));
 		}
-		return ResponseEntity.ok(new ConfermaDTO("Accesso eseguito con successo. Codice = "+stato+" "));
+		return ResponseEntity.ok(new ConfermaDTO("Accesso eseguito con successo. Codice ="+stato+""));
 	}
 	
 	@GetMapping("/logout")

@@ -25,16 +25,16 @@ public class FiltroAdmin implements Filter{
 	private UtenteService utenteService;
 	@Autowired
 	private HttpServletRequest http;
-
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		// TODO Auto-generated method stub
 		System.out.println("sono nel filtro admin");
 		String codice = http.getHeader("codice");
+		System.out.println(codice);
 		String url = http.getRequestURL().toString();
 		System.out.println("url in admin: "+url);
-		System.out.println(codice);
+		
 		if(url.contains("admin")) {
 			String stato = utenteService.utenteAdmin(codice);
 			if(stato.equals(DTO.NO)) {

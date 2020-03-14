@@ -2,6 +2,8 @@ package it.spootify.spootify.web.rest.resources;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,6 +26,9 @@ public class PlaylistResource {
 	
 	@Autowired
 	private PlaylistService playlistService;
+	@Autowired
+	private HttpServletRequest http;
+	
 	@GetMapping
 	public ResponseEntity<List<PlaylistDTO>> listAll(){
 		List<PlaylistDTO> listaPlaylistDTO = Playlist.buildListDTO(playlistService.listAll());
@@ -37,7 +42,8 @@ public class PlaylistResource {
 	@PostMapping("/insert")
 	public ResponseEntity<PlaylistDTO> insert(@RequestBody PlaylistDTO playlistDTO){
 		Playlist playlist = playlistDTO.buildModel(true,true,true);
-		playlistService.inserisci(playlist);
+		String codice = http.getHeader("codice");
+		playlistService.crea(playlist,codice);
 		return ResponseEntity.ok(playlistDTO);
 	}
 	@PutMapping("/modifica/{id}")
