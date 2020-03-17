@@ -36,6 +36,7 @@ public class FiltroAdmin implements Filter{
 		System.out.println("url in admin: "+url);
 		
 		if(url.contains("admin")) {
+			System.out.println("entra nel if admin");
 			String stato = utenteService.utenteAdmin(codice);
 			if(stato.equals(DTO.NO)) {
 				request.setAttribute("dtoAttr", new ErroreDTO("Area riservata"));

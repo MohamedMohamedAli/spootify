@@ -24,7 +24,7 @@ public class FiltroSessione implements Filter{
 	private HttpServletRequest http;
 	@Autowired
 	private UtenteService utenteService;
-	
+	private static final String[]OK =  {"login","tabella","/css/","/js/","riproduzione","index"};
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
@@ -33,7 +33,9 @@ public class FiltroSessione implements Filter{
 		String codice = http.getHeader("codice");
 		String stato = "";
 		String url = http.getRequestURL().toString();
-		if(!url.contains("login")) {
+		System.out.println(url+"  whiteList:"+whiteList(url));
+		
+		if(!whiteList(url)) {
 			stato = utenteService.utenteSessione(codice);
 			System.out.println("stato: "+stato);
 			switch (stato) {
@@ -51,6 +53,15 @@ public class FiltroSessione implements Filter{
 		}
 		
 		chain.doFilter(request, response);
+	}
+	
+	public boolean whiteList(String url) {
+		for(String s:OK) {
+			if(url.contains(s)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

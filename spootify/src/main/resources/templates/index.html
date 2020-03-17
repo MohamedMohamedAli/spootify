@@ -1,0 +1,222 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+
+<script src="/js/jquery-1.10.2.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/bootstrap.bundle.js"></script>
+<script	src="/js/jqueryUI/jquery-ui.min.js"></script>
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+		<script>
+		$(document).ready(function(){
+			document.getElementById("tabella").style.display="none";
+			document.getElementById("tabella2").style.display="none";
+		});
+		</script>
+<!-- Bootstrap -->
+<!-- Static navbar -->
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Index</title>
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+</head>
+<body>
+
+	<div class="container">
+
+		
+
+
+		
+		<form class="form-horizontal" id="datiID">
+      		<div class="form-group">
+				<label class="control-label col-sm-2" for="codiceId">Token:</label>
+	    		<div class="col-sm-4">
+					<input class="form-control" type="text" id="codiceId" name="codice" value="">
+			 	</div>      
+			 	</div>		
+			 	<div class="form-group">	
+      			<label class="control-label col-sm-2" for="idAlbumId">Id Album:</label>
+	    		<div class="col-sm-4">
+					<input class="form-control" type="text" id="idAlbumId" name="idAlbum" >
+			 	</div>
+  			</div>	
+  			<div class="form-group">	
+      			<label class="control-label col-sm-2" for="idPlaylistId">Id Playlist:</label>
+	    		<div class="col-sm-4">
+					<input class="form-control" type="text" id="idPlaylistId" name="idPlaylist" >
+			 	</div>
+  			</div>	
+  		
+  			
+  			<div class="form-group">        
+		      <div class="col-sm-offset-2 col-sm-10">
+		        <input id="invia" type="button" class="btn btn-primary btn-md" value="Avvia Riproduzione"/>
+		      </div>
+		    </div>
+
+		</form>
+		
+		<table  class="table table-striped" id="tabella" >
+			<thead>
+				<tr>
+					<th>Brano</th>
+					<th>Album</th>
+					<th>Artista</th>
+					<th>       </th>
+				</tr>
+			</thead>
+		</table>
+		<table  class="table table-striped" id="tabella2" >
+			<thead>
+				<tr>
+					<th><input id="backID" type="button" class="btn btn-primary btn-md" value="Back"/></th>
+					<th><input id="indietroID" type="button" class="btn btn-primary btn-md" value="indietro"/></th>
+					<th><input id="cancellaID" type="button" class="btn btn-primary btn-md" value="Cancella Riproduzione"/></th>
+					<th><input id="nextID" type="button" class="btn btn-primary btn-md" value="Next"/></th>
+				</tr>
+			</thead>
+		</table>
+		
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+			</div>
+		</div>
+	</div>
+	
+	<script>
+		$("#invia").click(function(){
+			var example = {};
+			example["codice"] = $("#codiceId").val();
+			example["idAlbum"] = $("#idAlbumId").val();
+			example["idPlaylist"] = $("#idPlaylistId").val();
+			$.ajax(
+					{
+					url: "/riproduzione",
+			        type: "POST",
+			        contentType:"application/json",
+			        dataType: "json",
+			        data: JSON.stringify(example),
+			        success: function(data, status, xhr){
+			        	console.log("data: "+data.id);
+			        	riproduzione = data;
+			        	datiForm = document.getElementById("datiID");
+			        	datiForm.style.display="none";
+			        	costruisciTabella(data, data.brano);
+			        },
+			        error: function(){
+			        	console.log("errore");
+			        	alert("dati inseriti non validi");
+			        }
+			});
+		});
+		
+		function costruisciTabella(data, brano){
+			tabella2 = document.getElementById("tabella2");
+			tabella2.style.display="block";
+			tabella = document.getElementById("tabella");
+			tabella.style.display="block";
+			if(data.album != null){
+				var brani = data.album.brani;
+				for(var i=0; i<brani.length; i++){
+					console.log("titolo brano: "+brani[i].titolo);
+					var row = tabella.insertRow();
+					var cell1 = row.insertCell();
+					var cell2 = row.insertCell();
+					var cell3 = row.insertCell();
+					var cell4 = row.insertCell();
+					cell1.innerHTML = brani[i].titolo;
+					cell2.innerHTML = data.album.titolo;
+					cell3.innerHTML = data.album.artista.nome+" "+data.album.artista.cognome;
+					if(brano.id == brani[i].id){
+						cell4.innerHTML = "&#10003;";
+					}
+				}
+			}else{
+				console.log("n.brani[playlist]: "+data.playlist.brani.length);
+				var brani = data.playlist.brani;
+				for(var i=0; i<brani.length; i++){
+					console.log("titolo brano: "+brani[i].titolo);
+					var row = tabella.insertRow();
+					var cell1 = row.insertCell();
+					var cell2 = row.insertCell();
+					var cell3 = row.insertCell();
+					var cell4 = row.insertCell();
+					cell1.innerHTML = brani[i].titolo;
+					cell2.innerHTML = brani[i].album.titolo;
+					cell3.innerHTML = brani[i].album.artista.nome+" "+brani[i].album.artista.cognome;
+					if(brano.id == brani[i].id){
+						cell4.innerHTML = "&#10003;";
+					}
+				}
+			}
+		}
+		
+		$("#cancellaID").click(function(){
+			$.ajax({
+				url: "/riproduzione/elimina",
+				type:"DELETE",
+				contentType:"application/json",
+				dataType:"json",
+				data: JSON.stringify(riproduzione.id),
+				success: function(data, status, xhr){
+					svuota();
+					tabella.style.display = "none";
+					tabella2.style.display = "none";
+					datiForm.style.display = "block";
+					}
+			});
+		});
+		
+		$("#backID").click(function(){
+			var input ={};
+			input["id"] = riproduzione.id;
+			input["brano"] = "back";
+			$.ajax({
+				url:"/riproduzione/cambiaBrano",
+				type:"PUT",
+				contentType:"application/json",
+				dataType:"json",
+				data: JSON.stringify(input),
+				success:function(data, status, xhr){
+					svuota();
+					costruisciTabella(riproduzione, data);
+				}
+			});
+		});
+		$("#nextID").click(function(){
+			var input ={};
+			input["id"] = riproduzione.id;
+			input["brano"] = "next";
+			$.ajax({
+				url:"/riproduzione/cambiaBrano",
+				type:"PUT",
+				contentType:"application/json",
+				dataType:"json",
+				data: JSON.stringify(input),
+				success:function(data, status, xhr){
+					svuota();
+					costruisciTabella(riproduzione, data);
+				}
+			});
+		});
+		$("#indietroID").click(function(){
+			svuota();
+			tabella.style.display = "none";
+			tabella2.style.display = "none";
+			datiForm.style.display = "block";
+		});
+		function svuota(){
+			if(riproduzione.album != null){
+				for(var i=0; i<riproduzione.album.brani.length; i++){
+					tabella.deleteRow(-1);
+				}
+			}else{
+				for(var i=0; i<riproduzione.playlist.brani.length; i++){
+					tabella.deleteRow(-1);
+				}
+			}
+		}
+
+	</script>
+</body>
+</html>

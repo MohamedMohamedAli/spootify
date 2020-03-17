@@ -46,9 +46,12 @@ public class PlaylistServiceImpl implements PlaylistService{
 	@Override
 	public void aggiorna(Playlist input) {
 		// TODO Auto-generated method stub
+		Utente creatore = utenteRepository.caricaUtenteConCodice(input.getCreatore().getNome());
 		Playlist playlist = playlistRepository.findById(input.getId()).orElse(null);
-		input.setCreatore(playlist.getCreatore());
-		playlistRepository.save(input);
+		if(creatore.getId()==playlist.getCreatore().getId()) {
+			input.setCreatore(creatore);
+			playlistRepository.save(input);
+		}
 	}
 	@Transactional
 	@Override

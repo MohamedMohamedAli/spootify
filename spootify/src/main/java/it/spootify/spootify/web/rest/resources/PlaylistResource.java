@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.spootify.spootify.model.Playlist;
+import it.spootify.spootify.model.Utente;
 import it.spootify.spootify.service.PlaylistService;
 import it.spootify.spootify.web.dto.ConfermaDTO;
 import it.spootify.spootify.web.dto.PlaylistDTO;
@@ -50,6 +51,9 @@ public class PlaylistResource {
 	public ResponseEntity<PlaylistDTO> modifica(@RequestBody PlaylistDTO playlistDTO, @PathVariable("id")Long id){
 		playlistDTO.setId(id);
 		Playlist playlist = playlistDTO.buildModel(true, true, true);
+		Utente creatore = new Utente();
+		creatore.setNome(http.getHeader("codice"));
+		playlist.setCreatore(creatore);
 		playlistService.aggiorna(playlist);
 		return ResponseEntity.ok(playlistDTO);
 	}

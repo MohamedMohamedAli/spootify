@@ -94,11 +94,14 @@ public class RiproduzioneServiceImpl implements RiproduzioneService{
 			Riproduzione riproduzione = new Riproduzione();
 			riproduzione.setCustomer(utente);
 			if(StringUtils.isNotBlank(example.getIdAlbum())) {
-				Album album = albumRepository.findByIdWithBrani(Long.parseLong(example.getIdAlbum()));
+				Album album = albumRepository.findByIdEager(Long.parseLong(example.getIdAlbum()));
 				riproduzione.setAlbum(album);
 				riproduzione.setBrano(album.getBrani().get(0));
 			}else {
 				Playlist playlist = playlistRepository.findByIdWithBrani(Long.parseLong(example.getIdPlaylist()));
+				for(int i=0; i<playlist.getBrani().size(); i++) {
+					playlist.getBrani().get(i).setAlbum(albumRepository.findByIdEager(playlist.getBrani().get(i).getAlbum().getId()));
+				}
 				riproduzione.setPlaylist(playlist);
 				riproduzione.setBrano(playlist.getBrani().get(0));
 			}
@@ -109,13 +112,16 @@ public class RiproduzioneServiceImpl implements RiproduzioneService{
 		// CARICO RIPRODUZIONE ESISTENTE
 		Riproduzione riproduzione1 = lista.get(0);
 		if(riproduzione1.getAlbum()!=null) {
-			Album album1 = albumRepository.findByIdWithBrani(Long.parseLong(example.getIdAlbum()));
+			Album album1 = albumRepository.findByIdEager(Long.parseLong(example.getIdAlbum()));
 			riproduzione1.setAlbum(album1);
 			if(riproduzione1.getBrano()==null) {
 				riproduzione1.setBrano(album1.getBrani().get(0));
 			}
 		}else {
 			Playlist playlist1 = playlistRepository.findByIdWithBrani(Long.parseLong(example.getIdPlaylist()));
+			for(int i=0; i<playlist1.getBrani().size(); i++) {
+				playlist1.getBrani().get(i).setAlbum(albumRepository.findByIdEager(playlist1.getBrani().get(i).getAlbum().getId()));
+			}
 			riproduzione1.setPlaylist(playlist1);
 			if(riproduzione1.getBrano()==null) {
 				riproduzione1.setBrano(playlist1.getBrani().get(0));
