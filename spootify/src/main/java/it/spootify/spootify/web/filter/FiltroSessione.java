@@ -24,13 +24,14 @@ public class FiltroSessione implements Filter{
 	private HttpServletRequest http;
 	@Autowired
 	private UtenteService utenteService;
-	private static final String[]OK =  {"login","tabella","/css/","/js/","riproduzione","index"};
+	private static final String[]OK =  {"login","tabella","/css/","/js/"};
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		// TODO Auto-generated method stub
 		System.out.println("sono nel filtro sessione");
 		String codice = http.getHeader("codice");
+		System.out.println("codice: "+codice);
 		String stato = "";
 		String url = http.getRequestURL().toString();
 		System.out.println(url+"  whiteList:"+whiteList(url));

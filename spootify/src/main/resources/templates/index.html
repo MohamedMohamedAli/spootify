@@ -96,6 +96,7 @@
 			        contentType:"application/json",
 			        dataType: "json",
 			        data: JSON.stringify(example),
+			        headers: { codice: $("#codiceId").val()},
 			        success: function(data, status, xhr){
 			        	console.log("data: "+data.id);
 			        	riproduzione = data;
@@ -158,6 +159,7 @@
 				contentType:"application/json",
 				dataType:"json",
 				data: JSON.stringify(riproduzione.id),
+				headers: { codice: $("#codiceId").val()},
 				success: function(data, status, xhr){
 					svuota();
 					tabella.style.display = "none";
@@ -177,6 +179,7 @@
 				contentType:"application/json",
 				dataType:"json",
 				data: JSON.stringify(input),
+				headers: { codice: $("#codiceId").val()},
 				success:function(data, status, xhr){
 					svuota();
 					costruisciTabella(riproduzione, data);
@@ -193,6 +196,7 @@
 				contentType:"application/json",
 				dataType:"json",
 				data: JSON.stringify(input),
+				headers: { codice: $("#codiceId").val()},
 				success:function(data, status, xhr){
 					svuota();
 					costruisciTabella(riproduzione, data);
