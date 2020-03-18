@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.spootify.spootify.model.Brano;
+import it.spootify.spootify.model.Playlist;
 import it.spootify.spootify.repository.BranoRepository;
 
 @Service
@@ -48,6 +49,11 @@ public class BranoServiceImpl implements BranoService{
 	@Override
 	public void elimina(Long id) {
 		// TODO Auto-generated method stub
+		System.out.println("entro elimina brano");
+		Brano brano = branoRepository.findById(id).orElse(null);
+		for(Playlist p:brano.getListaPlaylist()) {
+			p.getBrani().remove(brano);
+		}
 		branoRepository.deleteById(id);
 	}
 	@Transactional(readOnly=true)
@@ -56,6 +62,7 @@ public class BranoServiceImpl implements BranoService{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	@Transactional
 	@Override
 	public Brano caricaConIdEager(Long id) {
 		// TODO Auto-generated method stub

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.spootify.spootify.model.Album;
+import it.spootify.spootify.model.Brano;
 import it.spootify.spootify.repository.AlbumRepository;
 
 @Service
@@ -19,6 +20,8 @@ public class AlbumServiceImpl implements AlbumService{
 	private EntityManager entityManager;
 	@Autowired
 	private AlbumRepository albumRepository;
+	@Autowired
+	private BranoService branoService;
 	
 	@Transactional(readOnly=true)
 	@Override
@@ -48,6 +51,10 @@ public class AlbumServiceImpl implements AlbumService{
 	@Override
 	public void elimina(Long id) {
 		// TODO Auto-generated method stub
+		Album album = albumRepository.findByIdWithBrani(id);
+		for(Brano b:album.getBrani()) {
+			branoService.elimina(b.getId());
+		}
 		albumRepository.deleteById(id);
 	}
 	@Transactional(readOnly=true)

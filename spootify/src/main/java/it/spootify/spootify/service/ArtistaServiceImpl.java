@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import it.spootify.spootify.model.Album;
 import it.spootify.spootify.model.Artista;
 import it.spootify.spootify.repository.ArtistaRepository;
 
@@ -19,6 +20,8 @@ public class ArtistaServiceImpl implements ArtistaService{
 	private EntityManager entityManager;
 	@Autowired
 	private ArtistaRepository artistaRepository;
+	@Autowired
+	private AlbumService albumService;
 	
 	@Transactional(readOnly=true)
 	@Override
@@ -48,6 +51,10 @@ public class ArtistaServiceImpl implements ArtistaService{
 	@Override
 	public void elimina(Long id) {
 		// TODO Auto-generated method stub
+		Artista artista = artistaRepository.findByIdEager(id);
+		for(Album a:artista.getListaAlbum()) {
+			albumService.elimina(a.getId());
+		}
 		artistaRepository.deleteById(id);
 	}
 	@Transactional(readOnly=true)
