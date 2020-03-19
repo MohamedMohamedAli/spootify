@@ -4,6 +4,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,9 +38,9 @@ public class SessioneResource {
 		case DTO.NO:
 			return ResponseEntity.status(401).body(new ErroreDTO("Credenziali errate"));
 		case DTO.CREATO:
-			return ResponseEntity.ok(new ErroreDTO("In attesa di conferma"));
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErroreDTO("In attesa di conferma"));
 		case DTO.DISABILITATO:
-			return ResponseEntity.ok(new ErroreDTO("L'account è stato disabilitato"));
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErroreDTO("L'account è stato disabilitato"));
 		}
 		return ResponseEntity.ok(new ConfermaDTO("Accesso eseguito con successo. Codice ="+stato+""));
 	}
@@ -50,7 +51,7 @@ public class SessioneResource {
 		System.out.println("codice: "+codice);
 		String stato = utenteService.logout(codice);
 		if(stato.equals(DTO.NO)) {
-			return ResponseEntity.ok(new ErroreDTO("L'utente non è loggato"));
+			return ResponseEntity.status(401).body(new ErroreDTO("L'utente non è loggato"));
 		}
 		return ResponseEntity.ok(new ConfermaDTO("Logout eseguito con successo"));
 	}
@@ -62,9 +63,9 @@ public class SessioneResource {
 		String stato = utenteService.utenteSessione(codice);
 		switch (stato) {
 		case DTO.NO:
-			return ResponseEntity.ok(new ErroreDTO("L'utente non è loggato"));
+			return ResponseEntity.status(401).body(new ErroreDTO("L'utente non è loggato"));
 		case DTO.SESSIONE_SCADUTA:
-			return ResponseEntity.ok(new ErroreDTO("Sessione scaduta"));
+			return ResponseEntity.status(401).body(new ErroreDTO("Sessione scaduta"));
 		}
 		return ResponseEntity.ok(new ConfermaDTO("Sei in sessione"));
 	}
@@ -73,26 +74,26 @@ public class SessioneResource {
 	public ResponseEntity<DTO> errore(ServletRequest request){
 		System.out.println("entro nel get");
 		ErroreDTO errore = (ErroreDTO)request.getAttribute("dtoAttr");
-		return ResponseEntity.ok(errore);
+		return ResponseEntity.status(401).body(errore);
 	}
 	
 	@PutMapping("/errore")
 	public ResponseEntity<DTO> errorePut(ServletRequest request){
 		System.out.println("entro nel put");
 		ErroreDTO errore = (ErroreDTO)request.getAttribute("dtoAttr");
-		return ResponseEntity.ok(errore);
+		return ResponseEntity.status(401).body(errore);
 	}
 	@PostMapping("/errore")
 	public ResponseEntity<DTO> errorePost(ServletRequest request){
 		System.out.println("entro nel post");
 		ErroreDTO errore = (ErroreDTO)request.getAttribute("dtoAttr");
-		return ResponseEntity.ok(errore);
+		return ResponseEntity.status(401).body(errore);
 	}
 	@DeleteMapping("/errore")
 	public ResponseEntity<DTO> erroreDelete(ServletRequest request){
 		System.out.println("entro nel delete");
 		ErroreDTO errore = (ErroreDTO)request.getAttribute("dtoAttr");
-		return ResponseEntity.ok(errore);
+		return ResponseEntity.status(401).body(errore);
 	}
 	
 }
